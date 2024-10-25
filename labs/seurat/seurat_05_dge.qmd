@@ -103,7 +103,7 @@ markers_genes <- FindAllMarkers(
 ```{r}
 markers_genes %>%
     group_by(cluster) %>%
-    top_n(-25, p_val_adj) -> top25
+    slice_min(p_val_adj, n = 25, with_ties = FALSE) -> top25
 head(top25)
 ```
 

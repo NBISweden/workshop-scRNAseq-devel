@@ -32,7 +32,7 @@ suppressPackageStartupMessages({
     library(basilisk)
 })
 
-condapath = "/Users/asabjor/miniconda3/envs/scanpy_2024_nopip"
+condapath = "~/miniconda3/envs/scanpy_2024_nopip"
 ```
 
 ```{r}
@@ -125,13 +125,13 @@ names(alldata@reductions)
 #| fig-width: 10
 
 wrap_plots(
-  DimPlot(alldata, reduction = "pca", group.by = "orig.ident")+NoAxes()+ggtitle("PCA raw_data"),
-  DimPlot(alldata, reduction = "tsne", group.by = "orig.ident")+NoAxes()+ggtitle("tSNE raw_data"),
-  DimPlot(alldata, reduction = "umap", group.by = "orig.ident")+NoAxes()+ggtitle("UMAP raw_data"),
+  DimPlot(alldata, reduction = "pca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("PCA raw_data"),
+  DimPlot(alldata, reduction = "tsne", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("tSNE raw_data"),
+  DimPlot(alldata, reduction = "umap", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("UMAP raw_data"),
   
-  DimPlot(alldata, reduction = "integrated_cca", group.by = "orig.ident")+NoAxes()+ggtitle("CCA integrated"),
-  DimPlot(alldata, reduction = "tsne_cca", group.by = "orig.ident")+NoAxes()+ggtitle("tSNE integrated"),
-  DimPlot(alldata, reduction = "umap_cca", group.by = "orig.ident")+NoAxes()+ggtitle("UMAP integrated"),
+  DimPlot(alldata, reduction = "integrated_cca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("CCA integrated"),
+  DimPlot(alldata, reduction = "tsne_cca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("tSNE integrated"),
+  DimPlot(alldata, reduction = "umap_cca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("UMAP integrated"),
   ncol = 3
 ) + plot_layout(guides = "collect")
 
@@ -157,7 +157,7 @@ wrap_plots(
 #| fig-width: 10
 
 myfeatures <- c("CD3E", "CD4", "CD8A", "NKG7", "GNLY", "MS4A1", "CD14", "LYZ", "MS4A7", "FCGR3A", "CST3", "FCER1A")
-FeaturePlot(alldata, reduction = "umap_cca", dims = 1:2, features = myfeatures, ncol = 4, order = T) + NoLegend() + NoAxes() + NoGrid()
+FeaturePlot(alldata, reduction = "umap_cca", dims = 1:2, features = myfeatures, ncol = 4, order = T) & NoLegend() & NoAxes()
 ```
 
 ## {{< meta dimred_harmony >}}
@@ -167,8 +167,8 @@ FeaturePlot(alldata, reduction = "umap_cca", dims = 1:2, features = myfeatures, 
 We can use the same function `IntegrateLayers()` but intstead specify the method `HarmonyIntegration`. And as above, we run UMAP on the new reduction from Harmony.
 
 ```{r}
-#| fig-height: 10
-#| fig-width: 13
+#| fig-height: 5
+#| fig-width: 6
 
 alldata <- IntegrateLayers(
   object = alldata, method = HarmonyIntegration,
@@ -178,7 +178,7 @@ alldata <- IntegrateLayers(
 
 
 alldata <- RunUMAP(alldata, dims = 1:30, reduction = "harmony", reduction.name = "umap_harmony")
-DimPlot(alldata, reduction = "umap_harmony", group.by = "orig.ident") + NoAxes() + ggtitle("Harmony UMAP")
+DimPlot(alldata, reduction = "umap_harmony", group.by = "orig.ident", shuffle = TRUE) + NoAxes() + ggtitle("Harmony UMAP")
 ```
 
 ## {{< meta dimred_scanorama >}}
@@ -192,7 +192,7 @@ so that genes are rows and cells are columns.
 
 ```{r}
 # get data matrices from all samples, with only the variable genes.
-data.layers <- Layers(alldata)[grep("data.",Layers(alldata))]
+data.layers <- Layers(alldata)[grep("^data.",Layers(alldata))]
 print(data.layers)
 
 assaylist <- lapply(data.layers, function(x) t(as.matrix(LayerData(alldata, layer = x)[hvgs_all,])))
@@ -288,10 +288,10 @@ Now we will plot UMAPS with all three integration methods side by side.
 #| fig-height: 8
 #| fig-width: 9
 
-p1 <- DimPlot(alldata, reduction = "umap", group.by = "orig.ident") + ggtitle("UMAP raw_data")
-p2 <- DimPlot(alldata, reduction = "umap_cca", group.by = "orig.ident") + ggtitle("UMAP CCA")
-p3 <- DimPlot(alldata, reduction = "umap_harmony", group.by = "orig.ident") + ggtitle("UMAP Harmony")
-p4 <- DimPlot(alldata, reduction = "umap_scanorama", group.by = "orig.ident")+ggtitle("UMAP Scanorama")
+p1 <- DimPlot(alldata, reduction = "umap", group.by = "orig.ident", shuffle = TRUE) + ggtitle("UMAP raw_data")
+p2 <- DimPlot(alldata, reduction = "umap_cca", group.by = "orig.ident", shuffle = TRUE) + ggtitle("UMAP CCA")
+p3 <- DimPlot(alldata, reduction = "umap_harmony", group.by = "orig.ident", shuffle = TRUE) + ggtitle("UMAP Harmony")
+p4 <- DimPlot(alldata, reduction = "umap_scanorama", group.by = "orig.ident", shuffle = TRUE)+ggtitle("UMAP Scanorama")
 
 wrap_plots(p1, p2, p3, p4, nrow = 2) + plot_layout(guides = "collect")
 ```

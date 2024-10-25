@@ -433,18 +433,18 @@ data.filt <- RunPCA(data.filt, verbose = F, npcs = 20)
 data.filt <- RunUMAP(data.filt, dims = 1:10, verbose = F)
 ```
 
-Then we run doubletFinder, selecting first 10 PCs and a `pK` value of 0.9. To optimize the parameters, you can run the `paramSweep` function in the package.
+Then we run doubletFinder, selecting first 10 PCs and a `pK` value of 0.09. To optimize the parameters, you can run the `paramSweep` function in the package.
 
 ```{r}
 suppressMessages(library(DoubletFinder))
 # Can run parameter optimization with paramSweep
 
-# sweep.res <- paramSweep_v3(data.filt)
+# sweep.res <- paramSweep(data.filt)
 # sweep.stats <- summarizeSweep(sweep.res, GT = FALSE)
 # bcmvn <- find.pK(sweep.stats)
 # barplot(bcmvn$BCmetric, names.arg = bcmvn$pK, las=2)
 
-# define the expected number of doublet cellscells.
+# define the expected number of doublet cells.
 nExp <- round(ncol(data.filt) * 0.04) # expect 4% doublets
 data.filt <- doubletFinder(data.filt, pN = 0.25, pK = 0.09, nExp = nExp, PCs = 1:10)
 ```
