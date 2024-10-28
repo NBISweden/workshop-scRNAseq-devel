@@ -85,10 +85,10 @@ Layers(alldata@assays$RNA)
 Now we can run the function `FindAllMarkers` that will run each of the clusters vs the rest. As you can see, there are some filtering criteria to remov genes that do not have certain log2FC or percent expressed. Here we only test for upregulated genes, so the `only.pos` parameter is set to `TRUE`. 
 
 ```{r}
-# Compute differentiall expression
+# Compute differential expression
 markers_genes <- FindAllMarkers(
-    alldata,
-    log2FC.threshold = 0.2,
+    alldata, 
+    logfc.threshold = 0.2,
     test.use = "wilcox",
     min.pct = 0.1,
     min.diff.pct = 0.2,
@@ -108,12 +108,15 @@ head(top25)
 ```
 
 ```{r}
+#| fig-height: 8
+#| fig-width: 12
+
 par(mfrow = c(2, 5), mar = c(4, 6, 3, 1))
 for (i in unique(top25$cluster)) {
     barplot(sort(setNames(top25$avg_log2FC, top25$gene)[top25$cluster == i], F),
         horiz = T, las = 1, main = paste0(i, " vs. rest"), border = "white", yaxs = "i"
     )
-    abline(v = c(0, 0.25), lty = c(1, 2))
+    abline(v = c(0, 0.2), lty = c(1, 2))
 }
 ```
 

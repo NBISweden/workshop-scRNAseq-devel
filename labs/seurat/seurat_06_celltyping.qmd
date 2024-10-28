@@ -126,7 +126,7 @@ ctrl <- AddMetaData(object = ctrl, metadata = predictions)
 DimPlot(ctrl, group.by = "predicted.id", label = T, repel = T) + NoAxes()
 ```
 
-Now plot how many cells of each celltypes can be found in each cluster.
+Now plot how many cells of each cell types can be found in each cluster.
 
 ```{r}
 #| fig-height: 5
@@ -207,7 +207,7 @@ options(future.globals.maxSize = 1e9)
 ctrl <- RunAzimuth(ctrl, reference = "pbmcref")
 ```
 
-This dataset has predictions at 3 different levels of annotation wiht `l1` being the more broad celltypes and `l3` more detailed annotation.
+This dataset has predictions at 3 different levels of annotation wiht `l1` being the more broad cell types and `l3` more detailed annotation.
 
 ```{r}
 DimPlot(ctrl, group.by = "predicted.celltype.l1", label = T, repel = T) + NoAxes()

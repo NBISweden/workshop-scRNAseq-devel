@@ -95,7 +95,7 @@ alldata = RunPCA(alldata, features = hvgs_all, verbose = FALSE)
 
 ## CCA
 
-In Seurat v4 we run the integration in two steps, first finding anchors between datasets with `FindIntegrationAnchors()` and then running the actual integration with `IntegrateData()`. Since Seurat v5 this is done in a single command using the function `IntegrateLayers()`, we specify the name for the integration as `integrated_cca`.
+In Seurat v4 we would run the integration in two steps, first finding anchors between datasets with `FindIntegrationAnchors()` and then running the actual integration with `IntegrateData()`. Since Seurat v5, this is done in a single command using the function `IntegrateLayers()`. We specify the name for the integration as `integrated_cca`.
 
 ``` {r}
 alldata <- IntegrateLayers(object = alldata, 
@@ -125,13 +125,19 @@ names(alldata@reductions)
 #| fig-width: 10
 
 wrap_plots(
-  DimPlot(alldata, reduction = "pca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("PCA raw_data"),
-  DimPlot(alldata, reduction = "tsne", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("tSNE raw_data"),
-  DimPlot(alldata, reduction = "umap", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("UMAP raw_data"),
+  DimPlot(alldata, reduction = "pca", group.by = "orig.ident", shuffle = TRUE) +
+    NoAxes()+ggtitle("PCA raw_data"),
+  DimPlot(alldata, reduction = "tsne", group.by = "orig.ident", shuffle = TRUE) +
+    NoAxes() + ggtitle("tSNE raw_data"),
+  DimPlot(alldata, reduction = "umap", group.by = "orig.ident", shuffle = TRUE) +
+    NoAxes() + ggtitle("UMAP raw_data"),
   
-  DimPlot(alldata, reduction = "integrated_cca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("CCA integrated"),
-  DimPlot(alldata, reduction = "tsne_cca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("tSNE integrated"),
-  DimPlot(alldata, reduction = "umap_cca", group.by = "orig.ident", shuffle = TRUE)+NoAxes()+ggtitle("UMAP integrated"),
+  DimPlot(alldata, reduction = "integrated_cca", group.by = "orig.ident", shuffle = TRUE) + 
+    NoAxes() + ggtitle("CCA integrated"),
+  DimPlot(alldata, reduction = "tsne_cca", group.by = "orig.ident", shuffle = TRUE) +
+    NoAxes() + ggtitle("tSNE integrated"),
+  DimPlot(alldata, reduction = "umap_cca", group.by = "orig.ident", shuffle = TRUE) +
+    NoAxes() + ggtitle("UMAP integrated"),
   ncol = 3
 ) + plot_layout(guides = "collect")
 
@@ -266,18 +272,20 @@ alldata[["scanoramaC"]] <- CreateDimReducObject(
 ```
 
 ```{r}
-#| fig-height: 8
-#| fig-width: 14
+#| fig-height: 5
+#| fig-width: 10
 
 #Here we use all PCs computed from Scanorama for UMAP calculation
 alldata <- RunUMAP(alldata, dims = 1:100, reduction = "scanorama",reduction.name = "umap_scanorama")
 alldata <- RunUMAP(alldata, dims = 1:100, reduction = "scanoramaC",reduction.name = "umap_scanoramaC")
 
 
-p1 = DimPlot(alldata, reduction = "umap_scanorama", group.by = "orig.ident") + NoAxes() + ggtitle("Scanorama UMAP")
-p2 = DimPlot(alldata, reduction = "umap_scanoramaC", group.by = "orig.ident") + NoAxes() + ggtitle("ScanoramaC UMAP")
+p1 = DimPlot(alldata, reduction = "umap_scanorama", group.by = "orig.ident", shuffle = TRUE) + 
+  NoAxes() + ggtitle("Scanorama UMAP")
+p2 = DimPlot(alldata, reduction = "umap_scanoramaC", group.by = "orig.ident", shuffle = TRUE) + 
+  NoAxes() + ggtitle("ScanoramaC UMAP")
 
-wrap_plots(p1,p2)
+wrap_plots(p1,p2) + plot_layout(guides = "collect")
 ```
 
 ## Overview all methods

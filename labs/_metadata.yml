@@ -25,8 +25,8 @@ qc_collate_3: "Here is how the count matrix and the metadata look like for every
 
 # calculate qc
 qc_calqc: "Calculate QC"
-qc_calqc_1: "Having the data in a suitable format, we can start calculating some quality metrics. We can for example calculate the percentage of mitochondrial and ribosomal genes per cell and add to the metadata. The proportion of hemoglobin genes can give an indication of red blood cell contamination, but in some tissues it can also be the case that some celltypes have higher content of hemoglobin. This will be helpful to visualize them across different metadata parameters (i.e. datasetID and chemistry version). There are several ways of doing this. The QC metrics are finally added to the metadata table."
-qc_calqc_2: "Citing from Simple Single Cell workflows (Lun, McCarthy & Marioni, 2017): High proportions are indicative of poor-quality cells (Islam et al. 2014; Ilicic et al. 2016), possibly because of loss of cytoplasmic RNA from perforated cells. The reasoning is that mitochondria are larger than individual transcript molecules and less likely to escape through tears in the cell membrane."
+qc_calqc_1: "Having the data in a suitable format, we can start calculating some quality metrics. We can for example calculate the percentage of mitochondrial and ribosomal genes per cell and add to the metadata. The proportion of hemoglobin genes can give an indication of red blood cell contamination, but in some tissues it can also be the case that some cell types have higher content of hemoglobin. This will be helpful to visualize them across different metadata parameters (i.e. datasetID and chemistry version). There are several ways of doing this. The QC metrics are finally added to the metadata table."
+qc_calqc_2: "Citing from Simple Single Cell workflows (Lun, McCarthy & Marioni, 2017): High proportions [of mitochondrial genes] are indicative of poor-quality cells (Islam et al. 2014; Ilicic et al. 2016), possibly because of loss of cytoplasmic RNA from perforated cells. The reasoning is that mitochondria are larger than individual transcript molecules and less likely to escape through tears in the cell membrane."
 qc_calqc_3: "Now you can see that we have additional data in the metadata slot."
 
 # plot qc
@@ -38,7 +38,7 @@ qc_plotqc_3: "Plot additional QC stats that we have calculated as scatter plots.
 # filtering
 qc_filter: "Filtering"
 qc_filter_detect: "Detection-based filtering"
-qc_filter_detect_1: "A standard approach is to filter cells with low number of reads as well as genes that are present in at least a given number of cells. Here we will only consider cells with at least 200 detected genes and genes need to be expressed in at least 3 cells. Please note that those values are highly dependent on the library preparation method used."
+qc_filter_detect_1: "A standard approach is to filter out cells with low number of reads as well as genes that are not present in at least a given number of cells. Here we will only consider cells with at least 200 detected genes and genes need to be expressed in at least 3 cells. Please note that those values are highly dependent on the library preparation method used."
 qc_filter_detect_3: "Extremely high number of detected genes could indicate doublets. However, depending on the cell type composition in your sample, you may have cells with higher number of genes (and also higher counts) from one cell type. In this case, we will run doublet prediction further down, so we will skip this step now, but the code below is an example of how it can be run:"
 qc_filter_detect_4: "Additionally, we can also see which genes contribute the most to such reads. We can for instance plot the percentage of counts per gene."
 qc_filter_detect_5: "As you can see, MALAT1 constitutes up to 30% of the UMIs from a single cell and the other top genes are mitochondrial and ribosomal genes. It is quite common that nuclear lincRNAs have correlation with quality and mitochondrial reads, so high detection of MALAT1 may be a technical issue. Let us assemble some information about such genes, which are important for quality control and downstream filtering."
@@ -61,7 +61,7 @@ qc_filter_genes_1: "As the level of expression of mitochondrial and MALAT1 genes
 qc_sex: "Sample sex"
 qc_sex_1: "When working with human or animal samples, you should ideally constrain your experiments to a single sex to avoid including sex bias in the conclusions. However this may not always be possible. By looking at reads from chromosomeY (males) and XIST (X-inactive specific transcript) expression (mainly female) it is quite easy to determine per sample which sex it is. It can also be a good way to detect if there has been any mislabelling in which case, the sample metadata sex does not agree with the computational predictions."
 qc_sex_2: "To get chromosome information for all genes, you should ideally parse the information from the gtf file that you used in the mapping pipeline as it has the exact same annotation version/gene naming. However, it may not always be available, as in this case where we have downloaded public data. R package biomaRt can be used to fetch annotation information. The code to run biomaRt is provided. As the biomart instances are quite often unresponsive, we will download and use a file that was created in advance."
-qc_sex_3: "Now that we have the chromosome information, we can calculate the proportion of reads that comes from chromosome Y per cell.But first we have to remove all genes in the pseudoautosmal regions of chrY that are:
+qc_sex_3: "Now that we have the chromosome information, we can calculate the proportion of reads that comes from chromosome Y per cell. But first we have to remove all genes in the pseudoautosmal regions of chrY that are:
 
 * chromosome:GRCh38:Y:10001 - 2781479 is shared with X: 10001 - 2781479 (PAR1)
 * chromosome:GRCh38:Y:56887903 - 57217415 is shared with X: 155701383 - 156030895 (PAR2)
@@ -239,7 +239,7 @@ clust_3: |
 clust_4: "Some clusters that are clearly defined by higher number of genes and counts. These are either doublets or a larger celltype. And some clusters with low values on these metrics that are either low quality cells or a smaller celltype. You will have to explore these clusters in more detail to judge what you believe them to be."
 
 clust_sub: "Subclustering of T and NK-cells"
-clust_sub_1: "It is common that the subtypes of cells within a cluster is not so well separated when you have a heterogeneous dataset. In such a case it could be a good idea to run subclustering of individual celltypes. The main reason for subclustering is that the variable genes and the first principal components in the full analysis are mainly driven by differences between celltypes, while with subclustering we may detect smaller differences between subtypes within celltypes."
+clust_sub_1: "It is common that the subtypes of cells within a cluster is not so well separated when you have a heterogeneous dataset. In such a case it could be a good idea to run subclustering of individual cell types. The main reason for subclustering is that the variable genes and the first principal components in the full analysis are mainly driven by differences between cell types, while with subclustering we may detect smaller differences between subtypes within cell types."
 clust_sub_2: "So first, lets find out where our T-cell and NK-cell clusters are. We know that T-cells express CD3E, and the main subtypes are CD4 and CD8, while NK-cells express GNLY."
 clust_sub_3: "Ideally we should rerun all steps of integration with that subset of cells instead of just taking the joint embedding. If you have too few cells per sample in the celltype that you want to cluster it may not be possible.
 We will start with selecting a new set of genes that better reflecs the variability within this celltype"
@@ -312,7 +312,7 @@ ct_1: |
 
   Some methods will predict a celltype to each cell based on what it is most similar to, even if that celltype is not included in the reference. Other methods include an uncertainty so that cells with low similarity scores will be unclassified.
 
-  There are multiple different methods to predict celltypes, here we will just cover a few of those. 
+  There are multiple different methods to predict cell types, here we will just cover a few of those. 
 ct_2: "We will use a reference PBMC dataset from the `scPred` package which is provided as a Seurat object with counts. And we will test classification based on the `scPred` and `scMap` methods. Finally we will use gene set enrichment predict celltype based on the DEGs of each cluster."
 ct_seurat_2: "We will use a reference PBMC dataset from the `scPred` package which is provided as a Seurat object with counts. Unfortunately scPred has not been updated to run with Seurat v5, so we will not use it here. We will test classification based on Seurat `labelTransfer`, the `SingleR` method `scPred` and using `Azimuth`. Finally we will use gene set enrichment predict celltype based on the DEGs of each cluster."
 
@@ -330,12 +330,12 @@ ct_ref_3: "Run all steps of the analysis for the **ctrl** sample as well. Use th
 
 # scpred
 ct_scpred: scPred
-ct_scpred_1: "scPred will train a classifier based on all principal components. First, `getFeatureSpace()` will create a scPred object stored in the `@misc` slot where it extracts the PCs that best separates the different celltypes. Then `trainModel()` will do the actual training for each celltype."
-ct_scpred_2: "We can then print how well the training worked for the different celltypes by printing the number of PCs used, the ROC value and Sensitivity/Specificity. Which celltypes do you think are harder to classify based on this dataset?"
+ct_scpred_1: "scPred will train a classifier based on all principal components. First, `getFeatureSpace()` will create a scPred object stored in the `@misc` slot where it extracts the PCs that best separates the different cell types. Then `trainModel()` will do the actual training for each celltype."
+ct_scpred_2: "We can then print how well the training worked for the different cell types by printing the number of PCs used, the ROC value and Sensitivity/Specificity. Which cell types do you think are harder to classify based on this dataset?"
 ct_scpred_3: |
   You can optimize parameters for each dataset by chaining parameters and testing different types of models, see more at: <https://powellgenomicslab.github.io/scPred/articles/introduction.html>. But for now, we will continue with this model.
-  Now, let's predict celltypes on our data, where scPred will align the two datasets with Harmony and then perform classification.
-ct_scpred_4: "Now plot how many	cells of each celltypes	can be found in	each cluster."
+  Now, let's predict cell types on our data, where scPred will align the two datasets with Harmony and then perform classification.
+ct_scpred_4: "Now plot how many	cells of each cell types	can be found in	each cluster."
 
 # SingleR
 ct_singler: SinlgeR
@@ -354,7 +354,7 @@ ct_compare_3: "As you can see, the predictions are fairly similar, but there are
 
 ct_gsea: "GSEA with celltype markers"
 ct_gsea_1: |
-  Another option, where celltype can be classified on cluster level is to use gene set enrichment among the DEGs with known markers for different celltypes. Similar to how we did functional enrichment for the DEGs in the differential expression exercise. 
+  Another option, where celltype can be classified on cluster level is to use gene set enrichment among the DEGs with known markers for different cell types. Similar to how we did functional enrichment for the DEGs in the differential expression exercise. 
   There are some resources for celltype gene sets that can be used. Such as [CellMarker](http://bio-bigdata.hrbmu.edu.cn/CellMarker/), [PanglaoDB](https://panglaodb.se/) or celltype gene sets at [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp).
   We can also look at overlap between DEGs in a reference dataset and the dataset you are analyzing. 
 
@@ -362,8 +362,8 @@ ct_gsea_deg: "DEG overlap"
 ct_gsea_deg_1: "First, lets extract top DEGs for our Covid-19 dataset and the reference dataset. When we run differential expression for our dataset, we want to report as many genes as possible, hence we set the cutoffs quite lenient."
 ct_gsea_deg_2: "Now we can run GSEA for the DEGs from our dataset and check for enrichment of top DEGs in the reference dataset."
 ct_gsea_deg_3: |
-  Selecting top significant overlap per cluster, we can now rename the clusters according to the predicted labels. OBS! Be aware that if you have some clusters that have non-significant p-values for all the gene sets, the cluster label will not be very reliable. Also, the gene sets you are using may not cover all the celltypes you have in your dataset and hence predictions may just be the most similar celltype.
-  Also, some of the clusters have very similar p-values to multiple celltypes, for instance the ncMono and cMono celltypes are equally good for some clusters.
+  Selecting top significant overlap per cluster, we can now rename the clusters according to the predicted labels. OBS! Be aware that if you have some clusters that have non-significant p-values for all the gene sets, the cluster label will not be very reliable. Also, the gene sets you are using may not cover all the cell types you have in your dataset and hence predictions may just be the most similar celltype.
+  Also, some of the clusters have very similar p-values to multiple cell types, for instance the ncMono and cMono cell types are equally good for some clusters.
 ct_gsea_deg_4: "Compare the results with the other celltype prediction methods in the **ctrl_13** sample."
 
 ct_gsea_annot: "With annotated gene sets"
@@ -381,7 +381,7 @@ st_description: "Combining single-cell gene expression data with spatial informa
 st_1: |
   Spatial transcriptomic data with the Visium platform is in many ways similar to scRNAseq data. It contains UMI counts for 5-20 cells instead of single cells, but is still quite sparse in the same way as scRNAseq data is, but with the additional information about spatial location in the tissue.
 
-  Here we will first run quality control in a similar manner to scRNAseq data, then QC filtering, dimensionality reduction, integration and clustering. Then we will use scRNAseq data from mouse cortex to run label transfer to predict celltypes in the Visium spots.
+  Here we will first run quality control in a similar manner to scRNAseq data, then QC filtering, dimensionality reduction, integration and clustering. Then we will use scRNAseq data from mouse cortex to run label transfer to predict cell types in the Visium spots.
 
   We will use two **Visium** spatial transcriptomics dataset of the mouse brain (Sagittal), which are publicly available from the [10x genomics website](https://support.10xgenomics.com/spatial-gene-expression/datasets/). Note, that these dataset have already been filtered for spots that does not overlap with the tissue.
 
@@ -430,8 +430,8 @@ st_analysis_svg_1: |
 
 # single cell data
 st_ss: "Single cell data"
-st_ss_1: "We can use a scRNA-seq dataset as a reference to predict the proportion of different celltypes in the Visium spots. Keep in mind that it is important to have a reference that contains all the celltypes you expect to find in your spots. Ideally it should be a scRNA-seq reference from the exact same tissue. We will use a reference scRNA-seq dataset of ~14,000 adult mouse cortical cell taxonomy from the Allen Institute, generated with the SMART-Seq2 protocol."
-st_ss_2: "For speed, and for a more fair comparison of the celltypes, we will subsample all celltypes to a maximum of 200 cells per class (`subclass`)."
+st_ss_1: "We can use a scRNA-seq dataset as a reference to predict the proportion of different cell types in the Visium spots. Keep in mind that it is important to have a reference that contains all the cell types you expect to find in your spots. Ideally it should be a scRNA-seq reference from the exact same tissue. We will use a reference scRNA-seq dataset of ~14,000 adult mouse cortical cell taxonomy from the Allen Institute, generated with the SMART-Seq2 protocol."
+st_ss_2: "For speed, and for a more fair comparison of the cell types, we will subsample all cell types to a maximum of 200 cells per class (`subclass`)."
 
 # subset st
 st_sub: "Subset ST for cortex"
@@ -439,7 +439,7 @@ st_sub_1: "Since the scRNAseq dataset was generated from the mouse cortex, we wi
 
 # deconvolution
 st_deconv: "Deconvolution"
-st_deconv_1: "Deconvolution is a method to estimate the abundance (or proportion) of different celltypes in a bulkRNAseq dataset using a single cell reference. As the Visium data can be seen as a small bulk, we can both use methods for traditional bulkRNAseq as well as methods especially developed for Visium data. Some methods for deconvolution are DWLS, cell2location, Tangram, Stereoscope, RCTD, SCDC and many more."
+st_deconv_1: "Deconvolution is a method to estimate the abundance (or proportion) of different cell types in a bulkRNAseq dataset using a single cell reference. As the Visium data can be seen as a small bulk, we can both use methods for traditional bulkRNAseq as well as methods especially developed for Visium data. Some methods for deconvolution are DWLS, cell2location, Tangram, Stereoscope, RCTD, SCDC and many more."
 
 st_deconv_genes: "Select genes for deconvolution"
 st_deconv_genes_1: |
@@ -450,5 +450,5 @@ st_deconv_genes_1: |
   
   In this case we will use top DE genes per cluster, so first we have to run DGE detection on the scRNAseq data.
 
-st_2: "Keep in mind that the deconvolution results are just predictions, depending on how well your scRNAseq data covers the celltypes that are present in the ST data and on how parameters, gene selection etc. are tuned you may get different results."
+st_2: "Keep in mind that the deconvolution results are just predictions, depending on how well your scRNAseq data covers the cell types that are present in the ST data and on how parameters, gene selection etc. are tuned you may get different results."
 st_3: "Subset for another region that does not contain cortex cells and check what you get from the label transfer. Suggested region is the right end of the posterial section that you can select like this:"

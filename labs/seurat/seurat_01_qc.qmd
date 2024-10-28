@@ -123,6 +123,7 @@ sdata.ctrl19$type <- "Ctrl"
 # Merge datasets into one single seurat object
 alldata <- merge(sdata.cov1, c(sdata.cov15, sdata.cov16, sdata.cov17, sdata.ctrl5, sdata.ctrl13, sdata.ctrl14, sdata.ctrl19), add.cell.ids = c("covid_1", "covid_15", "covid_16", "covid_17", "ctrl_5", "ctrl_13", "ctrl_14", "ctrl_19"))
 ```
+
 In Seurat v5, merging creates a single object, but keeps the expression information split into different layers for integration. If not proceeding with integration, rejoin the layers after merging.
 
 ``` {r}
@@ -173,9 +174,11 @@ Alternatively, percentage expression can be calculated manually. Here is an exam
 ```{r}
 #| eval: false
 # Do not run now!
-total_counts_per_cell <- colSums(alldata@assays$RNA@counts)
+total_counts_per_cell <- colSums(alldata@assays$RNA@layers$counts)
 mito_genes <- rownames(alldata)[grep("^MT-", rownames(alldata))]
-alldata$percent_mito2 <- colSums(alldata@assays$RNA@counts[mito_genes, ]) / total_counts_per_cell
+alldata$percent_mito2 <- 
+  colSums(alldata@assays$RNA@layers$counts[match(mito_genes, Features(alldata@assays$RNA)), ]) /
+  total_counts_per_cell
 ```
 
 :::
@@ -241,7 +244,7 @@ table(data.filt$orig.ident)
 #| fig-width: 15
 
 # Compute the proportion of counts of each gene per cell
-# Use sparse matrix operations, if your dataset is large, doing matrix devisions the regular way will take a very long time.
+# Use sparse matrix operations, if your dataset is large, doing matrix divisions the regular way will take a very long time.
 
 C <- data.filt[["RNA"]]$counts
 C@x <- C@x / rep.int(colSums(C), diff(C@p)) * 100
@@ -433,10 +436,10 @@ data.filt <- RunPCA(data.filt, verbose = F, npcs = 20)
 data.filt <- RunUMAP(data.filt, dims = 1:10, verbose = F)
 ```
 
-Then we run doubletFinder, selecting first 10 PCs and a `pK` value of 0.09. To optimize the parameters, you can run the `paramSweep` function in the package.
+Then we run doubletFinder, selecting the first 10 PCs and a `pK` value of 0.09. To optimize the parameters, you can run the `paramSweep` function in the package.
 
 ```{r}
-suppressMessages(library(DoubletFinder))
+
 # Can run parameter optimization with paramSweep
 
 # sweep.res <- paramSweep(data.filt)
@@ -447,6 +450,7 @@ suppressMessages(library(DoubletFinder))
 # define the expected number of doublet cells.
 nExp <- round(ncol(data.filt) * 0.04) # expect 4% doublets
 data.filt <- doubletFinder(data.filt, pN = 0.25, pK = 0.09, nExp = nExp, PCs = 1:10)
+
 ```
 
 ```{r}
