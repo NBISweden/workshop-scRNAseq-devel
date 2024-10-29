@@ -152,7 +152,7 @@ DotPlot(alldata, features = rev(as.character(unique(top5$gene))), group.by = sel
 # take top 3 genes per cluster/
 top5 %>%
     group_by(cluster) %>%
-    top_n(-3, p_val) -> top3
+    slice_min(p_val, n = 3) -> top3
 
 # set pt.size to zero if you do not want all the points to hide the violin shapes, or to a small value like 0.1
 VlnPlot(alldata, features = as.character(unique(top3$gene)), ncol = 5, group.by = sel.clust, assay = "RNA", pt.size = 0)
@@ -241,7 +241,7 @@ DGE_cell_selection <- FindAllMarkers(cell_selection,
 
 DGE_cell_selection %>%
     group_by(cluster) %>%
-    top_n(-5, p_val) -> top5_cell_selection
+    slice_min(p_val, n = 5) -> top5_cell_selection
 VlnPlot(cell_selection, features = as.character(unique(top5_cell_selection$gene)), ncol = 5, group.by = "type", assay = "RNA", pt.size = .1)
 ```
 
@@ -301,7 +301,7 @@ DGE_cell_selection$gene <- rownames(DGE_cell_selection)
 
 DGE_cell_selection %>%
     group_by(direction) %>%
-    top_n(-5, p_val) %>%
+    slice_min(p_val, n = 5) %>%
     arrange(direction) -> top5_cell_selection
 ```
 
@@ -348,7 +348,7 @@ We can examine more genes with a DotPlot:
 
 DGE_cell_selection %>%
     group_by(direction) %>%
-    top_n(-20, p_val) -> top20_cell_selection
+    slice_min(p_val, n = 20) -> top20_cell_selection
 DotPlot(cell_selection, features = rev(as.character(unique(top20_cell_selection$gene))), group.by = "orig.ident", assay = "RNA") + coord_flip() + RotatedAxis()
 ```
 
@@ -393,7 +393,7 @@ DGE_sub$gene <- rownames(DGE_sub)
 
 DGE_sub %>%
     group_by(direction) %>%
-    top_n(-5, p_val) %>%
+    slice_min(p_val, n = 5) %>%
     arrange(direction) -> top5_sub
 
 VlnPlot(sub_data,
@@ -410,7 +410,7 @@ Plot as dotplot, but in the full (not subsampled) data, still only showing clust
 
 DGE_sub %>%
     group_by(direction) %>%
-    top_n(-20, p_val) -> top20_sub
+    slice_min(p_val, n = 20) -> top20_sub
 DotPlot(cell_selection, features = rev(as.character(unique(top20_sub$gene))), group.by = "orig.ident", assay = "RNA") +
     coord_flip() + RotatedAxis()
 ```
@@ -465,7 +465,7 @@ res.edgeR$gene <- rownames(res.edgeR)
 
 res.edgeR %>%
     group_by(dir) %>%
-    top_n(-10, PValue) %>%
+    slice_min(PValue, n = 10) %>%
     arrange(dir) -> top.edgeR
 
 DotPlot(cell_selection,
@@ -572,7 +572,7 @@ fcHurdle1$pval <- fcHurdle1$`Pr(>Chisq)`
 fcHurdle1$dir <- ifelse(fcHurdle1$z > 0, "Ctrl", "Covid")
 fcHurdle1 %>%
     group_by(dir) %>%
-    top_n(-10, pval) %>%
+    slice_min(pval, n = 10) %>%
     arrange(z) -> mastN
 
 mastN <- mastN$primerid
@@ -588,7 +588,7 @@ fcHurdle2$pval <- fcHurdle2$`Pr(>Chisq)`
 fcHurdle2$dir <- ifelse(fcHurdle2$z > 0, "Ctrl", "Covid")
 fcHurdle2 %>%
     group_by(dir) %>%
-    top_n(-10, pval) %>%
+    slice_min(pval, n = 10) %>%
     arrange(z) -> mastR
 
 mastR <- mastR$primerid

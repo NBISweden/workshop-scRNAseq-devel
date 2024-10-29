@@ -290,8 +290,8 @@ reference_markers <- FindAllMarkers(
 reference_markers <- reference_markers[order(reference_markers$avg_log2FC, decreasing = T), ]
 reference_markers %>%
     group_by(cluster) %>%
-    top_n(-100, p_val) %>%
-    top_n(50, avg_log2FC) -> top50_cell_selection
+    slice_min(p_val, n = 100) %>%
+    slice_max(avg_log2FC, n = 50) -> top50_cell_selection
 
 # Transform the markers into a list
 ref_list <- split(top50_cell_selection$gene, top50_cell_selection$cluster)
