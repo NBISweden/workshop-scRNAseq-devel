@@ -22,7 +22,8 @@ RUN conda-lock install --name scanpy /tmp/conda/conda-lock.yml && \
     chown -R ${NB_UID}:${NB_GID} "/home/${NB_USER}"
 
 # Configure container start
-COPY --chown="${NB_UID}:${NB_GID}" --chmod=0755 scripts/scanpy-start-script.sh scripts/download-labs.sh ${HOME}/
+COPY --chown="${NB_UID}:${NB_GID}" --chmod=0755 scripts/scanpy-start-script.sh ${HOME}/start-script.sh
+COPY --chown="${NB_UID}:${NB_GID}" --chmod=0755 scripts/download-labs.sh ${HOME}/download-labs.sh
 
 USER ${NB_UID}
 
