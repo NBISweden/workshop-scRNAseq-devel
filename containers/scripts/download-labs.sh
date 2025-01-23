@@ -1,19 +1,20 @@
 #! /bin/bash
 
 ## Example usage:
-#   ./download-labs.sh "https://github.com/NBISweden" "workshop-scRNAseq-devel" "compiled/labs/scanpy" "labs"
+#   ./download-labs.sh scanpy
+#   ./download-labs.sh seurat
 
-orgurl="$1"
-reponame="$2"
-repodir="$3"
-localdir="$4"
-
+orgurl="https://github.com/NBISweden"
+reponame="workshop-scRNAseq-devel"
+repodir="compiled/labs"
+localdir="labs"
+toolkit="$1"
 
 function git_sparse_clone() (
     mkdir -p ${localdir}
     git clone -n --depth=1 --filter=tree:0 ${orgurl}/${reponame} > /dev/null 2>&1
     cd ${reponame}
-    git sparse-checkout set --no-cone ${repodir} > /dev/null 2>&1
+    git sparse-checkout set --no-cone ${repodir}/${toolkit} > /dev/null 2>&1
     git checkout > /dev/null 2>&1
     cd - > /dev/null 2>&1
     find . -type f -name '*.ipynb' -exec mv -n {} ./${localdir}/ \;
@@ -30,7 +31,7 @@ function select_kernel() (
 
 
 function main() (
-    echo "downloading files from ${orgurl}/${reponame}/${repodir} into ${localdir}/..."
+    echo "downloading files from ${orgurl}/${reponame}/${repodir}/${toolkit} into ${localdir}/..."
     git_sparse_clone
     echo "making 'scanpy' default kernel..."
     select_kernel
