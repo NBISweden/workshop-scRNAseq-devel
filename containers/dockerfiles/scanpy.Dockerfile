@@ -12,9 +12,9 @@ COPY scripts/install_scanpy.sh /tmp/scripts/
 RUN /tmp/scripts/install_scanpy.sh && \
     mamba install --yes --channel conda-forge conda-lock
 
-COPY conda/scanpy-environment-2025.yaml conda/conda-lock.yml /tmp/conda/
+COPY conda/scanpy-environment-2025.yaml conda/scanpy-conda-lock.yaml /tmp/conda/
 
-RUN conda-lock install --name scanpy /tmp/conda/conda-lock.yml && \
+RUN conda-lock install --name scanpy /tmp/conda/scanpy-conda-lock.yaml && \
     mamba run -n scanpy python -m ipykernel install --name scanpy --display-name "scanpy" && \
     mamba clean --all -f -y && \
     chown -R ${NB_UID}:${NB_GID} "${CONDA_DIR}" && \
